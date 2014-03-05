@@ -1,0 +1,4 @@
+<redisCache>
+    <cluster>true</cluster>
+    <hostAndPorts>127.0.0.1:6379;11.23.0.1:6379</hostAndPorts>
+</redisCache>

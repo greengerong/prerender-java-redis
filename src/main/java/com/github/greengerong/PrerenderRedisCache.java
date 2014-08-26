@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisCommands;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class PrerenderRedisCache implements PreRenderEventHandler {
 
@@ -38,14 +39,15 @@ public class PrerenderRedisCache implements PreRenderEventHandler {
     }
 
     @Override
-    public void afterRender(HttpServletRequest clientRequest, HttpResponse prerenderResponse, String html) {
+    public String afterRender(HttpServletRequest clientRequest, HttpServletResponse clientResponse, HttpResponse prerenderResponse, String responseHtml) {
         final String url = clientRequest.getRequestURL().toString();
-        log.debug(String.format("Cache for %s:\r\n%s", url, html));
+        log.debug(String.format("Cache for %s:\r\n%s", url, responseHtml));
         try {
-            jedisCommands.set(url, html);
+            jedisCommands.set(url, responseHtml);
         } catch (Exception e) {
             log.error("Get cache form redis error", e);
         }
+        return responseHtml;
     }
 
     @Override
